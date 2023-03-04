@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css" integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="pass.css">
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <span><i></i></span>
+            <h1 role="presentation" title="password generator">password generator</h1>
+        </header>
+
+        <div class="rangebox">
+            <input id="rangeInp" type="range" min="4" max="16" step="1"><span class="rangeval" ></span>
+        </div>
+
+        <button type="submit" class="sub">generate <i></i></button>
+
+        <div class="checkBox">
+            <span>Include special caractere</span>
+            <input type="checkbox" id="sPc">
+        </div>
+
+        <div class="boxPass">
+            <input type="text" disabled id="myPass"><button id="copy" style="background-color:transparent ;border: none;outline: none;color: #fff;font-size: 16px;"><i class="bi bi-clipboard"></i></button>
+        </div>
+        <div class="alert-error" style="color: rgb(251, 251, 251) !important;font-weight: bold;font-size: 18px;letter-spacing: 3px;transform: translateX(-3000%);opacity: 0;filter: blur(10px); text-transform: capitalize;transition: all 600ms;">click to generate !</div>
+    </div>
+
+    <footer style="padding: 10px;background-color: transparent ;color: #fff; border-top:#ff851a  double 4px;display: flex;justify-content: space-between;align-items: center;position: absolute;bottom: 0;left: 0;width: 100%;">
+        <h3>Producted by @Ayoub 2023</h3>
+        <p id="clock" style="color: #fff; font-size: 20px; letter-spacing: 1px;"></p>
+    </footer>
+
+    
+
+    <script>
+        var rang = document.querySelector('#rangeInp')
+        var span = document.querySelector('.rangeval')
+        var container = document.querySelector('.container')
+        var string = 'qazwsxedcrfvtgbyhnujmiklop123456789QWERTYUIOPASDFGHJKLZXCVBNM'
+        var myPass = document.querySelector('#myPass')
+        var generatBtn = document.querySelector('.sub')
+        const bodyy = document.body 
+
+    
+        generatBtn.addEventListener('click', () => {
+
+            var pass_len = document.querySelector('#rangeInp').value
+            const includSp = document.querySelector('#sPc').checked
+            let password = ''
+            let finalSrting = string
+
+            if(includSp){
+                finalSrting+= '~!@#$%^&*()_+}"?><,./"; '
+            }
+            for(i=0 ; i< pass_len ; i++){
+                let str = finalSrting[Math.floor(Math.random() * finalSrting.length)]
+                password+= str
+            }
+            myPass.value = password
+        })
+        
+        rang.addEventListener('input',function(){
+            span.innerText = rang.value
+        })
+
+
+        window.addEventListener('load',function(){
+
+            setInterval(clocke,1000)
+
+            rang.value = 8
+            span.textContent = rang.value
+
+            const boxMsg = document.createElement('div')
+            boxMsg.classList.add('loadPage')
+            
+            setTimeout(()=>{
+                boxMsg.classList.add('showLoad')
+            },600)
+
+            boxMsg.innerHTML = `<h2>Welecome Back dear</h2>
+
+                                <p>You are loking for a strong password</p>
+                                <div class="box_btn_load">
+                                    <button id="confirm"  type="button" >Yes</button>
+                                    <button id="refuse" type="button" >No</button>
+                                </div>` 
+            
+            const btnConfirm = boxMsg.querySelector('#confirm')
+            const btnrefuse = boxMsg.querySelector('#refuse')
+
+            btnConfirm.addEventListener('click', function(e){
+                setTimeout(()=>{
+                    boxMsg.classList.remove('showLoad')
+                    container.classList.add('show')
+                },300)
+
+            })
+
+            bodyy.appendChild(boxMsg)   
+        })
+
+
+        var btnCopy = document.querySelector("#copy")
+        var err = document.querySelector('.alert-error')
+
+
+        btnCopy.addEventListener('click',()=>{
+            if(myPass.value){
+                navigator.clipboard.writeText(myPass.value)
+                myPass.value = 'text copied'
+                let oldIcon = btnCopy.firstElementChild
+                let newIcon  = document.createElement('i')
+                newIcon.setAttribute('class','bi bi-clipboard-check')
+                
+                btnCopy.replaceChild(newIcon, oldIcon) 
+                setTimeout(()=>{
+                    myPass.value = '';
+                    btnCopy.replaceChild(oldIcon, newIcon)
+                },1000)
+            }
+            else{
+                err.classList.add('show')
+                setTimeout(()=>{
+                    err.classList.remove('show')
+                },1200)
+            }
+        })
+
+
+        var clock = document.querySelector('#clock')
+
+
+        function clocke(){
+            var d = new Date()
+            let hours = d.getHours()
+            let min= d.getMinutes()
+            let s = d.getSeconds()
+            let $s , $min , $hours ;
+            if (s<10){
+                $s = "0" + s
+            }
+            else{
+                $s = s
+            }
+            if(min<10){
+                $min = "0" + min
+            }
+            else{
+                $min = min
+            }
+            if(hours<10){
+                $hours = "0" + hours
+            }
+            else{
+                $hours = hours
+            }
+            if(s==60){
+                s=0 ;
+                min+=1
+            }
+            if(min==60){
+                min=0
+                hours+=1
+            }
+            clock.textContent = `${$hours} : ${$min} : ${$s}` 
+        }
+
+    </script>
+    
+</body>
+</html>
